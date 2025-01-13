@@ -1,0 +1,103 @@
+using System;
+
+namespace LinearInterpolation
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Linear Interpolator");
+
+            // Input arrays for x and y values
+            double?[] x = new double?[3];
+            double?[] y = new double?[3];
+
+            // Get input from the user
+            for (int i = 0; i < 3; i++)
+            {
+                x[i] = GetInput($"Enter x{i} (or leave blank): ");
+                y[i] = GetInput($"Enter y{i} (or leave blank): ");
+            }
+
+            // Interpolate
+            Interpolate(x, y);
+        }
+
+        static double? GetInput(string prompt)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine();
+            if (double.TryParse(input, out double result))
+            {
+                return result;
+            }
+            return null;
+        }
+
+        static void Interpolate(double?[] x, double?[] y)
+        {
+            int numNullX = 0;
+            int numNullY = 0;
+            int nullIndex = 0;
+
+            // Determine which values are missing
+            for (int i = 0; i < 3; i++)
+            {
+                if (!x[i].HasValue)
+                {
+                    numNullX++;
+                    nullIndex = i;
+                }
+                if (!y[i].HasValue)
+                {
+                    numNullY++;
+                    nullIndex = i;
+                }
+            }
+
+            // Check for valid input
+            if (numNullX == 1 && numNullY == 0)
+            {
+                // Solve for x
+                SolveForX(x, y, nullIndex);
+            }
+            else if (numNullY == 1 && numNullX == 0)
+            {
+                // Solve for y
+                SolveForY(x, y, nullIndex);
+            }
+            else
+            {
+                Console.WriteLine("Please enter five out of the six values.");
+            }
+        }
+
+        static void SolveForX(double?[] x, double?[] y, int nullIndex)
+        {
+            if (y[0] == y[1]  y[0] == y[2]  y[1] == y[2])
+            {
+                Console.WriteLine("No two y values can be the same.");
+                return;
+            }
+
+            double x2 = ((y[1].Value - y[2].Value) * x[0].Value + (y[2].Value - y[0].Value) * x[1].Value) / (y[1].Value - y[0].Value);
+            x[nullIndex] = x2;
+
+            Console.WriteLine($"Calculated x{nullIndex} = {x2}");
+        }
+
+        static void SolveForY(double?[] x, double?[] y, int nullIndex)
+        {
+            if (x[0] == x[1]  x[0] == x[2]  x[1] == x[2])
+            {
+                Console.WriteLine("No two x values can be the same.");
+                return;
+            }
+
+            double y2 = ((x[1].Value - x[2].Value) * y[0].Value + (x[2].Value - x[0].Value) * y[1].Value) / (x[1].Value - x[0].Value);
+            y[nullIndex] = y2;
+
+            Console.WriteLine($"Calculated y{nullIndex} = {y2}");
+        }
+    }
+}
