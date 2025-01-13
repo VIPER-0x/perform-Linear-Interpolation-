@@ -1,0 +1,23 @@
+IF OUR INPUTS ARE IN SAME SCALE WE USE DIRECT INTERPOLATION BUT IF NOT WE USE SCALING METHOD FOR 2 CORDS 
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // مقادیر نمونه
+        double value = 50;
+        double min = 0;
+        double max = 100;
+        double newMax = 1000;
+        double newMin = 0;
+
+        double scaledValue = ScaleValue(value, min, max, newMax, newMin);
+        Console.WriteLine($"Scaled Value: {scaledValue}");
+    }
+
+    static double ScaleValue(double value, double min, double max, double newMax, double newMin)
+    {
+        return ((value - min) / (max - min)) * (newMax - newMin) + newMin;
+    }
+}
